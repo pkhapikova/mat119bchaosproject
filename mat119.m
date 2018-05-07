@@ -2,14 +2,14 @@
 input = 100;
 
 %Set up initial condition
-x(1) = 10;
-y(1) = 10;
-z(1) = 10;
-t(1) = 0;
+x(1) = 25;  X(1) = 11;
+y(1) = 25;  Y(1) = 11;
+z(1) = 25;  Z(1) = 11;
+t(1) = 0;   T(1) = 0;
 
 %Set up parameters
 s = 10;
-r = 28;
+r = 21;
 b = 8/3;
 A = 10^(-12);
 dt = 0.01;
@@ -34,12 +34,39 @@ for n = 1:1000
     zk4(n)=(x(n)+0.5*dt*xk3(n))*(y(n)+dt*yk3(n))-b*(z(n)+0.5*dt*zk3(n));
 
     x(n+1)=x(n)+(1/6)*(xk1(n)+2*xk2(n)+2*xk3(n)+xk4(n))*dt;
-    y(n+1)=y(n)+(1/6)*(yk1(n)+2*yk2(n)+2*yk3(n)+yk4(n))*dt+A*input*dt;
+    y(n+1)=y(n)+(1/6)*(yk1(n)+2*yk2(n)+2*yk3(n)+yk4(n))*dt;
     z(n+1)=z(n)+(1/6)*(zk1(n)+2*zk2(n)+2*zk3(n)+zk4(n))*dt;
-    
-    dydt(n)=(1/6)*(yk1(n)+2*yk2(n)+2*yk3(n)+yk4(n))+A*input;
+   
     t(n+1) = t(n) + dt;
     
 end
 
+%receiver with eluer forward method
 
+for n = 1:1000
+    
+    Xk1(n)=s*(Y(n)-X(n));
+    Yk1(n)=r*x(n)-Y(n)-x(n)*Z(n);
+    Zk1(n)=X(n)*Y(n)-b*Z(n);
+
+    Xk2(n)=s*((Y(n)+0.5*dt*Yk1(n))-(X(n)+0.5*dt*Xk1(n)));
+    Yk2(n)=r*(x(n)+0.5*dt*Xk1(n))-(Y(n)+0.5*dt*Yk1(n))-(x(n)+0.5*dt*Xk1(n))*(Z(n)+0.5*dt*Zk1(n));
+    Zk2(n)=(X(n)+0.5*dt*Xk1(n))*(Y(n)+0.5*dt*Yk1(n))-b*(Z(n)+0.5*dt*Zk1(n));
+
+    Xk3(n)=s*((Y(n)+0.5*dt*Yk2(n))-(X(n)+0.5*dt*Xk2(n)));
+    Yk3(n)=r*(x(n)+0.5*dt*Xk2(n))-(Y(n)+0.5*dt*Yk2(n))-(x(n)+0.5*dt*Xk2(n))*(Z(n)+0.5*dt*Zk2(n));
+    Zk3(n)=(X(n)+0.5*dt*Xk2(n))*(Y(n)+0.5*dt*Yk2(n))-b*(Z(n)+0.5*dt*Zk2(n));
+
+    Xk4(n)=s*((Y(n)+dt*Yk3(n))-(X(n)+0.5*dt*Xk3(n)));
+    Yk4(n)=r*(x(n)+0.5*dt*Xk3(n))-(Y(n)+dt*Yk3(n))-(X(n)+0.5*dt*Xk3(n))*(Z(n)+0.5*dt*Zk3(n));
+    Zk4(n)=(X(n)+0.5*dt*Xk3(n))*(Y(n)+dt*Yk3(n))-b*(Z(n)+0.5*dt*Zk3(n));
+
+    X(n+1)=X(n)+(1/6)*(Xk1(n)+2*Xk2(n)+2*Xk3(n)+Xk4(n))*dt;
+    Y(n+1)=Y(n)+(1/6)*(Yk1(n)+2*Yk2(n)+2*Yk3(n)+Yk4(n))*dt;
+    Z(n+1)=Z(n)+(1/6)*(Zk1(n)+2*Zk2(n)+2*Zk3(n)+Zk4(n))*dt;
+   
+    T(n+1) = T(n) + dt;
+    
+end
+
+%%%%%%%%%%%result
