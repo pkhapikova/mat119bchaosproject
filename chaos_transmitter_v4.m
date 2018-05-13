@@ -1,4 +1,4 @@
-function [x,y, input_message_len] = chaos_transmitter_v4(input_message)
+function [x,y] = chaos_transmitter_v4(input_message)
 
 %deal with input
 
@@ -50,7 +50,5 @@ end
 for i = 1:length(input_message_num) 
     y(999 + i) = y(999 + i) + input_message_num(i) .* A;
 end
-
-input_message_len = length(input_message_num)
 
 end

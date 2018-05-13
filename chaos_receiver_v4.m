@@ -1,4 +1,4 @@
-function decrypted_message = chaos_receiver_v4(x,y, input_message_len)
+function decrypted_message = chaos_receiver_v4(x,y)
 
 X = x;
 Y = y;
@@ -44,23 +44,24 @@ for n = 1:1999
 end
 
 %check to make sure message has been encrypted
-for i=1:input_message_len
+for i=1:999
     encrypted_message(i) = int8(Y(999+i)) + 85;
 end
 
 encrypted = char(encrypted_message)
 
 for i=1:1999
-    decryptarray(i) = y(i) - Y(i);
+    decrypt_array(i) = (y(i) - Y(i));
 end
 
-for i = 1:input_message_len
-    answer_array(i) = decryptarray(999 + i)./A;
+for i=1:1000
+    if int8(decrypt_array(999+i)./A) ~= 0
+        decrypt_array(i) = int8(decrypt_array(999+i)./A);
+    end
 end
 
 % convert array of float to int
-message_as_int = int8(answer_array);
 
-decrypted_message = char(message_as_int);
+decrypted_message = char(decrypt_array);
 
 end
